@@ -40,10 +40,17 @@ function Customizer() {
         break;
 
       default:
-        state.isFullTexture = false;
         state.isLogoTexture = true;
+        state.isFullTexture = false;
         break;
     }
+
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        [tabName]: !prevState[tabName]
+      };
+    });
   };
 
   const handleDecals = (type, result) => {
@@ -51,7 +58,7 @@ function Customizer() {
 
     state[decalType.stateProperty] = result;
 
-    if (!activeFilterTab[decalType.filterType]) {
+    if (!activeFilterTab[decalType.filterTab]) {
       handleActiveFilterTab(decalType.filterTab);
     }
   };
@@ -63,6 +70,19 @@ function Customizer() {
     });
   };
 
+  const handleSubmit = async (type) => {
+    if (!prompt) return alert('please enter a prompt');
+
+    try {
+      // TODO: call backend to generate ai image
+    } catch (err) {
+      alert(err);
+    } finally {
+      setGeneratingImg(false);
+      setActiveEditorTab('');
+    }
+  };
+
   const generateTabContent = () => {
     switch (activeEditorTab) {
       case 'colorpicker':
@@ -72,7 +92,14 @@ function Customizer() {
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />;
 
       case 'aipicker':
-        return <AiPicker />;
+        return (
+          <AiPicker
+            prompt={prompt}
+            setPrompt={setPrompt}
+            generatingImg={generatingImg}
+            handleSubmit={handleSubmit}
+          />
+        );
 
       default:
         return null;
@@ -123,8 +150,8 @@ function Customizer() {
                 key={tab.name}
                 tab={tab}
                 isFilterTab
-                isActiveTab=""
-                handleClick={() => {}}
+                isActiveTab={activeFilterTab[tab.name]}
+                handleClick={() => handleActiveFilterTab(tab.name)}
               />
             ))}
           </motion.div>
