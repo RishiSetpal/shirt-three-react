@@ -10,7 +10,7 @@ function CanvasModel() {
     <Canvas
       className="w-full max-w-full h-full transition-all ease-in"
       shadows
-      camera={{ position: [0, 0, 0], fov: 38 }}
+      camera={{ position: [0, 0, 0], fov: 30 }}
       gl={{ preserveDrawingBuffer: true }}
     >
       <ambientLight intensity={0.5} />
